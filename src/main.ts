@@ -4,6 +4,7 @@ import Layout from "./hexagon/Layout";
 import HexGrid from "./hexagon/HexGrid";
 import HexTile from "./hexagon/HexTile";
 import HexView from "./hexagon/HexView";
+
 (async () => {
 	// Create a new application
 	const app = new Application();
@@ -17,12 +18,10 @@ import HexView from "./hexagon/HexView";
 		autoDensity: true,
 		resolution: window.devicePixelRatio,
 	});
-	document.body.appendChild(app.canvas);
 
 	//create the hexgrid
 	const layout = new Layout({ size: { x: 40, y: 40 }, flat: true });
 	const hexGrid = new HexGrid(layout);
-	console.log(hexGrid);
 	//define the viewport
 	const bounds = layout.getBounds();
 	const width = bounds.width - 80;
@@ -34,7 +33,7 @@ import HexView from "./hexagon/HexView";
 		worldHeight: height,
 		events: app.renderer.events,
 	});
-	app.stage.addChild(viewport);
+	
 
 	// enable interaction plugins
 	viewport
@@ -49,17 +48,29 @@ import HexView from "./hexagon/HexView";
 			maxWidth: width,
 			maxHeight: height,
 		}); //clamp zoom
-	console.log(hexGrid.tiles.get("0,0,0"));
+	
 	//define attacker and defender objects
 	const attackerHex = new HexTile(20, 10, -30);
 	const attackerView = new HexView(attackerHex, layout);
 	attackerView.gfx.fill("red");
+	
+	let defenderHex = new HexTile(0, 0, 0);
+	const defenderView = new HexView(defenderHex, layout);
 
-	layout.addChild(attackerView.gfx);
-	//add layout to viewport
+	hexGrid.views.forEach((view) => {
+		view.gfx.interactive = true;
+		view.gfx.on("pointertap", () => {
+			defenderView.tile = view.tile;
+			defenderHex = view.tile;
+			defenderView.color = 0x800080;
+			defenderView.draw(layout);
+		});
+	});
+
+	//define hierarchy
+	document.body.appendChild(app.canvas);
+	app.stage.addChild(viewport);
 	viewport.addChild(layout);
-	attackerView.gfx.interactive = true;
-	attackerView.gfx.onclick = () => {
-		console.log(attackerHex);
-	};
+	layout.addChild(attackerView.gfx);
+	layout.addChild(defenderView.gfx);
 })();

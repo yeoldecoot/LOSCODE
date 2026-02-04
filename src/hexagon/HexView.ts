@@ -5,6 +5,7 @@ import { Layout } from "./Layout";
 import HexTile from "./HexTile";
 
 class HexView {
+    color = 0xffffff;
 	gfx: Graphics;
 	tile: HexTile;
 	pos: Point;
@@ -17,6 +18,7 @@ class HexView {
 	draw(layout: Layout) {
 		this.gfx.clear();
 		this.gfx.poly(layout.cornerPoints);
+		this.gfx.fill({ color: this.color, alpha: 1 });
 		this.gfx.stroke({ width: 2, color: 0x000000 });
 		const { x, y } = HexUtils.hexToPixel(this.tile, layout.layout);
 		this.gfx.position.set(x, y);

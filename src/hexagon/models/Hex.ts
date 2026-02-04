@@ -1,3 +1,9 @@
+export interface HexCoordinates {
+  q: number
+  r: number
+  s: number
+}
+
 export class Hex {
 	q: number;
 	r: number;
