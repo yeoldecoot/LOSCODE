@@ -2,24 +2,29 @@ import { Application, Container, Graphics } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { Hex } from "./hexgrid/models/Hex";
 import { polyPoint, layout } from "./hexgrid/Layout";
-import HexUtils from "./hexgrid/HexUtils";
+import { HexUtils } from "./hexgrid/HexUtils";
+import { initDevtools } from "@pixi/devtools";
 
 (async () => {
 	//draw a hex to the screen with a given color
-	function draw(hex: Hex, color: number) {
-		const { x, y } = HexUtils.hexToPixel(hex, layout);
-		const gfx = new Graphics()
+	function draw(gfx: Graphics, color: number, alpha = 1) {
+		gfx.clear()
 			.poly(polyPoint())
-			.fill(color)
+			.fill({ color, alpha })
 			.stroke({ width: 2, color: 0x000000 });
-		gfx.position.set(x, y);
-		main.addChild(gfx);
 	}
 
-	// Create a new application
-	const app = new Application();
+	function update() {
+		const attackerIndex = hexes.findIndex((hex) => hex.attacker === true);
+		if (attackerIndex !== -1) draw(graphics[attackerIndex], 0xa52422);
 
-	// Initialize the application
+		const defenderIndex = hexes.findIndex((hex) => hex.defender === true);
+		if (defenderIndex !== -1) draw(graphics[defenderIndex], 0xa4bab7);
+	}
+	// Create and initialize the application
+
+	const app = new Application();
+	initDevtools({ app });
 	await app.init({
 		background: "#FFFFFF",
 		resizeTo: window,
@@ -33,22 +38,33 @@ import HexUtils from "./hexgrid/HexUtils";
 	const main = new Container();
 
 	//create hexgrid
-	const hexes = new Map<string, Hex>();
+	const hexes: Hex[] = [];
+	const graphics: Graphics[] = [];
+
 	const mapWidth = 41;
 	const mapHeight = 40;
 	for (let q = 0; q < mapWidth; q++) {
 		const rOffset = Math.floor(q / 2);
 		for (let r = -rOffset; r < mapHeight - rOffset; r++) {
 			const s = -q - r;
-			const key = `${q},${r},${s}`;
-			hexes.set(key, new Hex(q, r, s));
-			draw(<Hex>hexes.get(key), 0xffffff);
+			const hex = new Hex(q, r, s);
+			const { x, y } = HexUtils.hexToPixel(hex, layout);
+			const gfx = new Graphics();
+			draw(gfx, 0xffffff, 0);
+			gfx.position.set(x, y);
+			gfx.interactive = true;
+			gfx.onclick = () => {
+				hexes.find((hex) => hex.defender === true)?.setDefender(false);
+				hex.setDefender(true);
+			};
+			main.addChild(gfx);
+			hexes.push(hex);
+			graphics.push(gfx);
 		}
 	}
-
 	//create attacker hex (still need to decide between state based vs object)
-	const attackerHex = new Hex(20, 10, -30);
-	draw(attackerHex, 0x555555);
+	const attackerHex = "20,10,-30";
+	hexes.find((hex) => hex.key === attackerHex)?.setAttacker(true);
 
 	//pan/zoom
 	const bounds = main.getBounds();
@@ -76,10 +92,12 @@ import HexUtils from "./hexgrid/HexUtils";
 			maxHeight: height,
 		}); //clamp zoom
 
-	//create heirarchy
-	app.stage.addChild(viewport);
-	viewport.addChild(main);
-
+	//ticker
+	app.ticker.add(() => {
+		update();
+	});
 	//define hierarchy
 	document.body.appendChild(app.canvas);
+	app.stage.addChild(viewport);
+	viewport.addChild(main);
 })();
