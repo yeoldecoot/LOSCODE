@@ -11,6 +11,8 @@ export class Hex {
 	r: number;
 	s: number;
 	gfx: Graphics;
+	color = 0xffffff;
+	alpha = 0;
 	constructor(q: number, r: number, s: number) {
 		this.q = q;
 		this.r = r;
@@ -18,7 +20,8 @@ export class Hex {
 		this.gfx = new Graphics();
 		this.gfx.interactive = true;
 		this.gfx.onclick = () => {
-			console.log(this);
+			this.color = 0x555555;
+			this.alpha = 1;
 		};
 	}
 }

@@ -1,4 +1,4 @@
-import { Application, Container, Graphics } from "pixi.js";
+import { Application, Container } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { Hex } from "./hexgrid/models/Hex";
 import { polyPoint, layout } from "./hexgrid/Layout";
@@ -7,16 +7,21 @@ import { initDevtools } from "@pixi/devtools";
 
 (async () => {
 	//draw a hex to the screen with a given color
-	function draw(gfx: Graphics, color: number, alpha = 1) {
-		gfx.clear()
+	function draw(hex: Hex) {
+		hex.gfx
+			.clear()
 			.poly(polyPoint())
-			.fill({ color, alpha })
+			.fill({ color: hex.color, alpha: hex.alpha })
 			.stroke({ width: 2, color: 0x000000 });
 	}
 
-	function update() {}
-	// Create and initialize the application
+	function update() {
+		hexes.forEach((hex) => {
+			draw(hex);
+		});
+	}
 
+	// Create and initialize the application
 	const app = new Application();
 	initDevtools({ app });
 	await app.init({
@@ -40,7 +45,7 @@ import { initDevtools } from "@pixi/devtools";
 		for (let r = -rOffset; r < mapHeight - rOffset; r++) {
 			const s = -q - r;
 			const hex = new Hex(q, r, s);
-			draw(hex.gfx, 0xffffff, 0);
+			draw(hex);
 			const { x, y } = HexUtils.hexToPixel(hex, layout);
 			hex.gfx.position.set(x, y);
 			main.addChild(hex.gfx);
@@ -78,6 +83,7 @@ import { initDevtools } from "@pixi/devtools";
 	app.ticker.add(() => {
 		update();
 	});
+
 	//define hierarchy
 	document.body.appendChild(app.canvas);
 	app.stage.addChild(viewport);
