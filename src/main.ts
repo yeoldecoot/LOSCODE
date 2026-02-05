@@ -14,13 +14,7 @@ import { initDevtools } from "@pixi/devtools";
 			.stroke({ width: 2, color: 0x000000 });
 	}
 
-	function update() {
-		const attackerIndex = hexes.findIndex((hex) => hex.attacker === true);
-		if (attackerIndex !== -1) draw(graphics[attackerIndex], 0xa52422);
-
-		const defenderIndex = hexes.findIndex((hex) => hex.defender === true);
-		if (defenderIndex !== -1) draw(graphics[defenderIndex], 0xa4bab7);
-	}
+	function update() {}
 	// Create and initialize the application
 
 	const app = new Application();
@@ -39,8 +33,6 @@ import { initDevtools } from "@pixi/devtools";
 
 	//create hexgrid
 	const hexes: Hex[] = [];
-	const graphics: Graphics[] = [];
-
 	const mapWidth = 41;
 	const mapHeight = 40;
 	for (let q = 0; q < mapWidth; q++) {
@@ -48,23 +40,13 @@ import { initDevtools } from "@pixi/devtools";
 		for (let r = -rOffset; r < mapHeight - rOffset; r++) {
 			const s = -q - r;
 			const hex = new Hex(q, r, s);
+			draw(hex.gfx, 0xffffff, 0);
 			const { x, y } = HexUtils.hexToPixel(hex, layout);
-			const gfx = new Graphics();
-			draw(gfx, 0xffffff, 0);
-			gfx.position.set(x, y);
-			gfx.interactive = true;
-			gfx.onclick = () => {
-				hexes.find((hex) => hex.defender === true)?.setDefender(false);
-				hex.setDefender(true);
-			};
-			main.addChild(gfx);
+			hex.gfx.position.set(x, y);
+			main.addChild(hex.gfx);
 			hexes.push(hex);
-			graphics.push(gfx);
 		}
 	}
-	//create attacker hex (still need to decide between state based vs object)
-	const attackerHex = "20,10,-30";
-	hexes.find((hex) => hex.key === attackerHex)?.setAttacker(true);
 
 	//pan/zoom
 	const bounds = main.getBounds();
