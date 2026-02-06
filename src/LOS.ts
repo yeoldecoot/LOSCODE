@@ -95,8 +95,6 @@ export function updateLOS(tiles: Tile[], attacker: Tile, defender: Tile) {
 			}
 		}
 	}
-	console.log(candidates);
-	// need to find the right sorting order...
 	candidates.sort((h1, h2) => {
 		const p1 = HexUtils.hexToPixel(h1.hex, layout);
 		const p2 = HexUtils.hexToPixel(h2.hex, layout);
