@@ -48,8 +48,11 @@ import { CheckBox, RadioGroup } from "@pixi/ui";
 				if(menu.selected === 0)
 				{
 					defender.hex = tile.hex;
-					updateLOS(tiles, attacker, defender);
+				}else if (menu.selected === 1)
+				{
+					tile.increaseWoods();
 				}
+				updateLOS(tiles, attacker, defender);
 			};
 			main.addChild(tile.gfx);
 			tiles.push(tile);
@@ -116,8 +119,6 @@ import { CheckBox, RadioGroup } from "@pixi/ui";
 		menu.innerView.padding = 10;
 	}
 	menu.interactive = true;
-	menu.onChange.connect((i) => {
-	})
 
 	//create viewport
 	const bounds = main.getBounds();

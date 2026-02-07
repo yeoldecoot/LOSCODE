@@ -1,14 +1,18 @@
-import { Graphics } from "pixi.js";
+import { Graphics, Sprite, Assets } from "pixi.js";
 import { Hex } from "./hexgrid/models/Hex";
 import { HexUtils } from "./hexgrid/HexUtils";
 import { layout } from "./hexgrid/Layout";
 import { polyPoint } from "./hexgrid/Layout";
+
+const lightWoods = await Assets.load('assets/tree.png');
+const heavyWoods = await Assets.load('assets/heavy.png')
 
 export class Tile {
 	hex: Hex;
 	gfx: Graphics;
 	color: number;
 	alpha: number;
+	sprite: Sprite;
 	x = 0;
 	y = 0;
 	defendersChoice = false;
@@ -20,6 +24,11 @@ export class Tile {
 	constructor(q: number, r: number, s: number, color = 0xffffff, alpha = 1) {
 		this.hex = new Hex(q, r, s);
 		this.gfx = new Graphics();
+		this.sprite = new Sprite();
+		this.sprite.scale = 0.1;
+		this.sprite.x = -25;
+		this.sprite.y = -25;
+		this.gfx.addChild(this.sprite);
 		this.color = color;
 		this.alpha = alpha;
 		this.update();
@@ -43,6 +52,51 @@ export class Tile {
 			.fill({ color, alpha })
 			.stroke({ width: 2, color: 0x000000 });
 		this.gfx.position.set(this.x, this.y);
+	}
+	increaseWoods() {
+		this.water = false;
+		if (!this.woods) {
+			this.woods = 1;
+			this.sprite.texture = lightWoods;
+		}
+		else if (this.woods === 1) {
+			this.woods = 2;
+			this.sprite.texture = heavyWoods;
+		}
+	}
+
+	addWater() {
+		this.woods = 0;
+		this.water = true;
+	}
+
+	increaseElevation() {
+		if (this.elevation) {
+			this.elevation++;
+		}
+		else {
+			this.elevation = 1;
+		}
+	}
+
+	decreaseWoods() {
+		if (!this.woods) {
+			this.woods = 0;
+		}
+		else if (this.woods > 0) {
+			this.woods--;
+		}
+	}
+
+	removeWater() {
+		this.water = false;
+	}
+
+	decreaseElevation() {
+		if (this.elevation) {
+			this.elevation--;
+		}
+		else { this.elevation = -1; }
 	}
 }
 export default Tile;
