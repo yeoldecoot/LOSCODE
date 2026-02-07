@@ -42,8 +42,8 @@ import { CheckBox, RadioGroup } from "@pixi/ui";
 		for (let r = -rOffset; r < mapHeight - rOffset; r++) {
 			const s = -q - r;
 			const tile = new Tile(q, r, s, 0xffffff, 0);
-			tile.gfx.interactive = true;
-			tile.gfx.onpointertap = () => {
+			tile.container.interactive = true;
+			tile.container.onpointertap = () => {
 				if (cameraMoving) return;
 				if(menu.selected === 0)
 				{
@@ -54,17 +54,17 @@ import { CheckBox, RadioGroup } from "@pixi/ui";
 				}
 				updateLOS(tiles, attacker, defender);
 			};
-			main.addChild(tile.gfx);
+			main.addChild(tile.container);
 			tiles.push(tile);
 		}
 	}
 
 	//create attacker and defender tiles and the line drawn between them
 	const attacker = new Tile(20, 10, -30, 0xa52422);
-	main.addChild(attacker.gfx);
+	main.addChild(attacker.container);
 
 	const defender = new Tile(20, 10, -30, 0x759aab);
-	main.addChild(defender.gfx);
+	main.addChild(defender.container);
 
 	const line = new Graphics();
 	main.addChild(line);

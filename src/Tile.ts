@@ -1,4 +1,4 @@
-import { Graphics, Sprite, Assets } from "pixi.js";
+import { Graphics, Sprite, Assets, Container } from "pixi.js";
 import { Hex } from "./hexgrid/models/Hex";
 import { HexUtils } from "./hexgrid/HexUtils";
 import { layout } from "./hexgrid/Layout";
@@ -9,6 +9,7 @@ const heavyWoods = await Assets.load('assets/heavy.png')
 
 export class Tile {
 	hex: Hex;
+	container: Container;
 	gfx: Graphics;
 	color: number;
 	alpha: number;
@@ -23,12 +24,14 @@ export class Tile {
 	elevation = 0;
 	constructor(q: number, r: number, s: number, color = 0xffffff, alpha = 1) {
 		this.hex = new Hex(q, r, s);
+		this.container = new Container();
 		this.gfx = new Graphics();
 		this.sprite = new Sprite();
 		this.sprite.scale = 0.1;
 		this.sprite.x = -25;
 		this.sprite.y = -25;
-		this.gfx.addChild(this.sprite);
+		this.container.addChild(this.gfx);
+		this.container.addChild(this.sprite);
 		this.color = color;
 		this.alpha = alpha;
 		this.update();
@@ -51,7 +54,7 @@ export class Tile {
 			.poly(polyPoint())
 			.fill({ color, alpha })
 			.stroke({ width: 2, color: 0x000000 });
-		this.gfx.position.set(this.x, this.y);
+		this.container.position.set(this.x, this.y);
 	}
 	increaseWoods() {
 		this.water = false;
