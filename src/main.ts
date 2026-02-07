@@ -46,11 +46,16 @@ import { CheckBox, RadioGroup } from "@pixi/ui";
 			tile.container.onpointertap = () => {
 				if (cameraMoving) return;
 				if (menu.selected === 0) {
-					defender.hex = tile.hex;
+					const prevD = tiles.find((t) => t.defender === true);
+					if (prevD) prevD.defender = false;
+					tile.defender = true;
+					defender = tile;
 				} else if (menu.selected === 1) {
 					tile.increaseWoods();
 				}
-				updateLOS(tiles, attacker, defender);
+				if (attacker && defender) {
+					updateLOS(tiles, attacker, defender);
+				}
 			};
 			main.addChild(tile.container);
 			tiles.push(tile);
@@ -58,20 +63,25 @@ import { CheckBox, RadioGroup } from "@pixi/ui";
 	}
 
 	//create attacker and defender tiles and the line drawn between them
-	const attacker = new Tile(20, 10, -30, 0xa52422);
-	main.addChild(attacker.container);
-
-	const defender = new Tile(20, 10, -30, 0x759aab);
-	main.addChild(defender.container);
-
+	const a = { q: 20, r: 10, s: -30 };
+	const attacker = tiles.find(
+		(t) => t.hex.q === a.q && t.hex.r === a.r && t.hex.s === a.s,
+	);
+	if (attacker) attacker.attacker = true;
+	const d = { q: NaN, r: NaN, s: NaN };
+	let defender = tiles.find(
+		(t) => t.hex.q === d.q && t.hex.r === d.r && t.hex.s === d.s,
+	);
 	const line = new Graphics();
 	main.addChild(line);
 
 	function updateLine() {
-		line.clear()
-			.moveTo(attacker.x, attacker.y)
-			.lineTo(defender.x, defender.y)
-			.stroke({ color: 0x000000, width: 2 });
+		if (attacker && defender) {
+			line.clear()
+				.moveTo(attacker.x, attacker.y)
+				.lineTo(defender.x, defender.y)
+				.stroke({ color: 0x000000, width: 2 });
+		}
 	}
 
 	//create UI
@@ -165,7 +175,6 @@ import { CheckBox, RadioGroup } from "@pixi/ui";
 	//update
 	app.ticker.maxFPS = 30;
 	app.ticker.add(() => {
-		defender.update();
 		updateLine();
 		tiles.forEach((tile) => {
 			tile.update();

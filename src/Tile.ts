@@ -16,6 +16,8 @@ export class Tile {
 	sprite: Sprite;
 	x = 0;
 	y = 0;
+	attacker = false;
+	defender = false;
 	defendersChoice = false;
 	intervening = false;
 	blocked = false;
@@ -44,6 +46,10 @@ export class Tile {
 			} else {
 				this.draw(0x555555, 1);
 			}
+		} else if (this.attacker) {
+			this.draw(0xa52422, 1);
+		} else if (this.defender) {
+			this.draw(0x759aab, 1);
 		} else {
 			this.draw(this.color, this.alpha);
 		}
