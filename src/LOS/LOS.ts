@@ -1,7 +1,7 @@
-import { HexUtils } from "./hexgrid/HexUtils";
-import { Hex } from "./hexgrid/models/Hex";
+import { HexUtils } from "../hexgrid/HexUtils";
+import { Hex } from "../hexgrid/models/Hex";
 import { Tile } from "./Tile";
-import { layout } from "./hexgrid/Layout";
+import { layout } from "../hexgrid/Layout";
 
 // dot product between hex A and B
 function dot(a: Hex, b: Hex) {

@@ -1,11 +1,12 @@
 import { Graphics, Sprite, Assets, Container } from "pixi.js";
-import { Hex } from "./hexgrid/models/Hex";
-import { HexUtils } from "./hexgrid/HexUtils";
-import { layout } from "./hexgrid/Layout";
-import { polyPoint } from "./hexgrid/Layout";
+import { Hex } from "../hexgrid/models/Hex";
+import { HexUtils } from "../hexgrid/HexUtils";
+import { layout } from "../hexgrid/Layout";
+import { polyPoint } from "../hexgrid/Layout";
 
 const lightWoods = await Assets.load("assets/tree.png");
 const heavyWoods = await Assets.load("assets/heavy.png");
+const waterTex = await Assets.load("assets/water.png");
 
 export class Tile {
 	hex: Hex;
@@ -28,6 +29,8 @@ export class Tile {
 		this.hex = new Hex(q, r, s);
 		this.container = new Container();
 		this.gfx = new Graphics();
+		({ x: this.x, y: this.y } = HexUtils.hexToPixel(this.hex, layout));
+		this.container.position.set(this.x, this.y);
 		this.sprite = new Sprite();
 		this.sprite.scale = 0.1;
 		this.sprite.x = -25;
@@ -39,7 +42,7 @@ export class Tile {
 		this.update();
 	}
 	update() {
-		({ x: this.x, y: this.y } = HexUtils.hexToPixel(this.hex, layout));
+		this.updateSprite();
 		if (this.intervening) {
 			if (this.defendersChoice) {
 				this.draw(0xff00ff, 0.5);
@@ -54,22 +57,25 @@ export class Tile {
 			this.draw(this.color, this.alpha);
 		}
 	}
+	private updateSprite() {
+		if (this.woods === 1) this.sprite.texture = lightWoods;
+		if (this.woods === 2) this.sprite.texture = heavyWoods;
+		if (this.water === true) this.sprite.texture = waterTex;
+	}
 	private draw(color: number, alpha: number) {
 		this.gfx
 			.clear()
 			.poly(polyPoint())
 			.fill({ color, alpha })
 			.stroke({ width: 2, color: 0x000000 });
-		this.container.position.set(this.x, this.y);
 	}
+
 	increaseWoods() {
 		this.water = false;
 		if (!this.woods) {
 			this.woods = 1;
-			this.sprite.texture = lightWoods;
 		} else if (this.woods === 1) {
 			this.woods = 2;
-			this.sprite.texture = heavyWoods;
 		}
 	}
 
