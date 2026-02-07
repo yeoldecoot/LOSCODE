@@ -41,8 +41,8 @@ import { CheckBox, RadioGroup } from "@pixi/ui";
 			const s = -q - r;
 			const tile = new Tile(q, r, s, 0xffffff, 0);
 			tile.gfx.interactive = true;
-			tile.gfx.onpointertap = (e) => {
-				if(cameraMoving) return;
+			tile.gfx.onpointertap = () => {
+				if (cameraMoving) return;
 				defender.hex = tile.hex;
 				updateLOS(tiles, attacker, defender);
 			};
@@ -118,7 +118,7 @@ import { CheckBox, RadioGroup } from "@pixi/ui";
 			maxWidth: width,
 			maxHeight: height,
 		}); //clamp zoom
-		
+
 	//prevent click event during viewport movement
 	let cameraMoving = false;
 	let moveEndTimer: number | null = null;
