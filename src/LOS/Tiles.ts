@@ -1,7 +1,7 @@
 import { Tile } from "./Tile";
 import { updateLOS } from "./LOS";
 import { cameraMoving } from "./Viewport.ts";
-import { menu, selectionRouter } from "./Menu.ts";
+import { menu } from "./Menu.ts";
 import { main } from "./Main.ts";
 import { Graphics } from "pixi.js";
 //create hexgrid
@@ -21,8 +21,12 @@ for (let q = 0; q < mapWidth; q++) {
 				if (prevD) prevD.defender = false;
 				tile.defender = true;
 				defender = tile;
-			} else {
-				selectionRouter(tile);
+			} else 	if (menu.selected === 1) {
+				tile.increaseWoods();
+			} else if (menu.selected === 2) {
+				tile.addWater();
+			} else if (menu.selected === 3) {
+				tile.increaseElevation();
 			}
 			if (attacker && defender) {
 				updateLOS(tiles, attacker, defender);
