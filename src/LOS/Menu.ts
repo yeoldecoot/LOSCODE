@@ -16,15 +16,15 @@ const activeScale = scale * 1.1;
 const margin = 15;
 const width = cursorTex.width * scale + margin + 5;
 const height = cursorTex.width * scale + margin + 20;
-export const menu = new Container();
-const panel = new Graphics()
+export const topMenu = new Container();
+const topPanel = new Graphics()
 	.roundRect(0, 0, width * 4, height, 10)
 	.fill({ color: 0x555555, alpha: 0.8 });
-menu.addChild(panel);
-menu.x = app.screen.width / 2 - width * 2;
-menu.y = 15;
+topMenu.addChild(topPanel);
+topMenu.x = app.screen.width / 2 - width * 2;
+topMenu.y = 15;
 
-export const radio = new RadioGroup({
+export const topRadio = new RadioGroup({
 	items: [
 		new CheckBox({
 			style: {
@@ -81,21 +81,21 @@ export const radio = new RadioGroup({
 	elementsMargin: margin,
 });
 
-if (radio.innerView) {
-	radio.innerView.padding = margin;
+if (topRadio.innerView) {
+	topRadio.innerView.padding = margin;
 }
-radio.interactive = true;
-menu.addChild(radio);
+topRadio.interactive = true;
+topMenu.addChild(topRadio);
 
-export const addSubtract = new Container();
-const panel2 = new Graphics()
+export const bottomMenu = new Container();
+const bottomPanel = new Graphics()
 	.roundRect(0, 0, width * 2 + 10, height, 10)
 	.fill({ color: 0x555555, alpha: 0.8 });
-addSubtract.addChild(panel2);
-addSubtract.x = app.screen.width / 2 - width;
-addSubtract.y = app.screen.height - 100;
+bottomMenu.addChild(bottomPanel);
+bottomMenu.x = app.screen.width / 2 - width;
+bottomMenu.y = app.screen.height - 100;
 
-export const radio2 = new RadioGroup({
+export const bottomRadio = new RadioGroup({
 	items: [
 		new CheckBox({
 			style: {
@@ -126,8 +126,8 @@ export const radio2 = new RadioGroup({
 	elementsMargin: margin,
 });
 
-if (radio2.innerView) {
-	radio2.innerView.padding = margin;
+if (bottomRadio.innerView) {
+	bottomRadio.innerView.padding = margin;
 }
-radio2.interactive = true;
-addSubtract.addChild(radio2);
+bottomRadio.interactive = true;
+bottomMenu.addChild(bottomRadio);

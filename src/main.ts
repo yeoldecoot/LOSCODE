@@ -1,6 +1,6 @@
 import { app } from "./LOS/App";
 import { main } from "./LOS/Main";
-import { addSubtract, menu } from "./LOS/Menu";
+import { topMenu, bottomMenu } from "./LOS/Menu";
 import { viewport } from "./LOS/Viewport.ts";
 import { updateLine } from "./LOS/Tiles";
 import { tiles } from "./LOS/Tiles";
@@ -17,7 +17,7 @@ import { tiles } from "./LOS/Tiles";
 	//define hierarchy
 	document.body.appendChild(app.canvas);
 	app.stage.addChild(viewport);
-	app.stage.addChild(menu);
-	app.stage.addChild(addSubtract);
+	app.stage.addChild(topMenu);
+	app.stage.addChild(bottomMenu);
 	viewport.addChild(main);
 })();
