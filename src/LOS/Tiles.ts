@@ -1,7 +1,7 @@
 import { Tile } from "./Tile";
 import { updateLOS } from "./LOS";
 import { cameraMoving } from "./Viewport.ts";
-import { radio } from "./Menu.ts";
+import { radio, radio2 } from "./Menu.ts";
 import { main } from "./Main.ts";
 import { Graphics } from "pixi.js";
 //create hexgrid
@@ -16,17 +16,33 @@ for (let q = 0; q < mapWidth; q++) {
 		tile.container.interactive = true;
 		tile.container.onpointertap = () => {
 			if (cameraMoving) return;
-			if (radio.selected === 0) {
-				const prevD = tiles.find((t) => t.defender === true);
-				if (prevD) prevD.defender = false;
-				tile.defender = true;
-				defender = tile;
-			} else 	if (radio.selected === 1) {
-				tile.increaseWoods();
-			} else if (radio.selected === 2) {
-				tile.addWater();
-			} else if (radio.selected === 3) {
-				tile.increaseElevation();
+			if (radio2.selected === 0) {
+				if (radio.selected === 0) {
+					const prevD = tiles.find((t) => t.defender === true);
+					if (prevD) prevD.defender = false;
+					tile.defender = true;
+					defender = tile;
+				} else if (radio.selected === 1) {
+					tile.increaseWoods();
+				} else if (radio.selected === 2) {
+					tile.addWater();
+				} else if (radio.selected === 3) {
+					tile.increaseElevation();
+				}
+			}
+			if (radio2.selected === 1) {
+				if (radio.selected === 0) {
+					const prevD = tiles.find((t) => t.defender === true);
+					if (prevD) prevD.defender = false;
+					tile.defender = true;
+					defender = tile;
+				} else if (radio.selected === 1) {
+					tile.decreaseWoods();
+				} else if (radio.selected === 2) {
+					tile.removeWater();
+				} else if (radio.selected === 3) {
+					tile.decreaseElevation();
+				}
 			}
 			if (attacker && defender) {
 				updateLOS(tiles, attacker, defender);

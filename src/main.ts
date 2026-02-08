@@ -1,6 +1,6 @@
 import { app } from "./LOS/App";
 import { main } from "./LOS/Main";
-import { menu } from "./LOS/Menu";
+import { addSubtract, menu } from "./LOS/Menu";
 import { viewport } from "./LOS/Viewport.ts";
 import { updateLine } from "./LOS/Tiles";
 import { tiles } from "./LOS/Tiles";
@@ -18,5 +18,6 @@ import { tiles } from "./LOS/Tiles";
 	document.body.appendChild(app.canvas);
 	app.stage.addChild(viewport);
 	app.stage.addChild(menu);
+	app.stage.addChild(addSubtract);
 	viewport.addChild(main);
 })();

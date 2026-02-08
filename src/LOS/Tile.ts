@@ -1,4 +1,4 @@
-import { Graphics, Sprite, Container, Text } from "pixi.js";
+import { Graphics, Sprite, Container, Text, Texture } from "pixi.js";
 import { Hex } from "../hexgrid/models/Hex";
 import { HexUtils } from "../hexgrid/HexUtils";
 import { layout } from "../hexgrid/Layout";
@@ -66,8 +66,9 @@ export class Tile {
 	}
 	private updateSprite() {
 		if (this.woods === 1) this.sprite.texture = lightWoods;
-		if (this.woods === 2) this.sprite.texture = heavyWoods;
-		if (this.water === true) this.sprite.texture = waterTex;
+		else if (this.woods === 2) this.sprite.texture = heavyWoods;
+		else if (this.water === true) this.sprite.texture = waterTex;
+		else this.sprite.texture = Texture.EMPTY;
 	}
 	private draw(color: number, alpha: number) {
 		this.gfx
