@@ -1,4 +1,4 @@
-import { Graphics, Sprite, Container } from "pixi.js";
+import { Graphics, Sprite, Container, Text } from "pixi.js";
 import { Hex } from "../hexgrid/models/Hex";
 import { HexUtils } from "../hexgrid/HexUtils";
 import { layout } from "../hexgrid/Layout";
@@ -22,9 +22,14 @@ export class Tile {
 	woods = 0;
 	water = false;
 	elevation = 0;
+	elevationText: Text;
 	constructor(q: number, r: number, s: number, color = 0xffffff, alpha = 1) {
 		this.hex = new Hex(q, r, s);
 		this.container = new Container();
+		this.elevationText = new Text();
+		this.elevationText.scale = 0.55;
+		this.elevationText.x = -25;
+		this.elevationText.y = 25;
 		this.gfx = new Graphics();
 		({ x: this.x, y: this.y } = HexUtils.hexToPixel(this.hex, layout));
 		this.container.position.set(this.x, this.y);
@@ -34,12 +39,17 @@ export class Tile {
 		this.sprite.y = -25;
 		this.container.addChild(this.gfx);
 		this.container.addChild(this.sprite);
+		this.container.addChild(this.elevationText);
 		this.color = color;
 		this.alpha = alpha;
 		this.update();
 	}
 	update() {
 		this.updateSprite();
+		if (this.elevation > 0)
+			this.elevationText.text = `Level ${this.elevation}`;
+		else if (this.elevation < 0)
+			this.elevationText.text = `Depth ${Math.abs(this.elevation)}`;
 		if (this.intervening) {
 			if (this.defendersChoice) {
 				this.draw(0xff00ff, 0.5);
