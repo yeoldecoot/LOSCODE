@@ -4,7 +4,14 @@ import { defineConfig } from "vite";
 export default defineConfig({
 	base: "/LOS/",
 	build: {
-		target: "esnext", // <- allows top-level await
+		target: "es2022",
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					["pixijs"]: ["pixi.js"],
+				},
+			},
+		},
 	},
 	server: {
 		port: 8080,

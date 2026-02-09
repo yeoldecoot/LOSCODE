@@ -5,19 +5,17 @@ import { viewport } from "./LOS/Viewport.ts";
 import { updateLine } from "./LOS/Tiles";
 import { tiles } from "./LOS/Tiles";
 
-(async () => {
-	//update
-	app.ticker.maxFPS = 30;
-	app.ticker.add(() => {
-		updateLine();
-		tiles.forEach((tile) => {
-			tile.update();
-		});
+//update
+app.ticker.maxFPS = 30;
+app.ticker.add(() => {
+	updateLine();
+	tiles.forEach((tile) => {
+		tile.update();
 	});
-	//define hierarchy
-	document.body.appendChild(app.canvas);
-	app.stage.addChild(viewport);
-	app.stage.addChild(topMenu);
-	app.stage.addChild(bottomMenu);
-	viewport.addChild(main);
-})();
+});
+//define hierarchy
+document.body.appendChild(app.canvas);
+app.stage.addChild(viewport);
+app.stage.addChild(topMenu);
+app.stage.addChild(bottomMenu);
+viewport.addChild(main);
