@@ -32,10 +32,10 @@ for (let q = 0; q < mapWidth; q++) {
 			}
 			if (bottomRadio.selected === 1) {
 				if (topRadio.selected === 0) {
-					const prevD = tiles.find((t) => t.defender === true);
-					if (prevD) prevD.defender = false;
-					tile.defender = true;
-					defender = tile;
+					const prevA = tiles.find((t) => t.attacker === true);
+					if (prevA) prevA.attacker = false;
+					tile.attacker = true;
+					attacker = tile;
 				} else if (topRadio.selected === 1) {
 					tile.decreaseWoods();
 				} else if (topRadio.selected === 2) {
@@ -55,7 +55,7 @@ for (let q = 0; q < mapWidth; q++) {
 
 //create attacker and defender tiles and the line drawn between them
 const a = { q: 20, r: 10, s: -30 };
-const attacker = tiles.find(
+let attacker = tiles.find(
 	(t) => t.hex.q === a.q && t.hex.r === a.r && t.hex.s === a.s,
 );
 if (attacker) attacker.attacker = true;

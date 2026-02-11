@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-	base: "/LOS/",
+	base: "./",
 	build: {
 		target: "es2022",
 		rollupOptions: {
